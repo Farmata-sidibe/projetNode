@@ -8,8 +8,12 @@ db.sequelize
 .catch((err) => console.log(err));
 
 const router = require("./app/routes/index.js");
+
+app.use(express.json());
 //Ajout des routes
 app.use("/api", router);
+
+
 
 
 module.exports = app;
