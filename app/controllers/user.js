@@ -31,12 +31,12 @@ exports.login = async(req, res) => {
             } 
         });
 
-        if (user === null) {
+        if (!user) {
             res.status(404).json({ message: "l'utilisateur n'existe pas" });
           
         } else {
 
-            const passwordIsValid = await bcrypt.compareSync(
+            const passwordIsValid = await bcrypt.compare(
                 req.body.password,
                 user.password
             );
@@ -44,14 +44,17 @@ exports.login = async(req, res) => {
                 res.status(401).json({ message: "Mot de passe incorrect" });
             }
 
-            const token = await jwt.sign(userdata, process.env.TOKEN_SECRET, { expiresIn: 1440 });
-            res.status(200).json({user, token: token })
+            const token = await jwt.sign({id: user.id}, process.env.TOKEN_SECRET, { expiresIn: process.env.JWTExpiration });
+            res.status(200).json({
+                accessToken: token,
+                user: user,
+            })
 
         }
 
    }catch(err){
         res.status(500).json({
-            message: err.message || "erreur lors du login"
+            message: err.message || "Une erreur s'est produite lors de l'authentification"
         }
         );
    }
