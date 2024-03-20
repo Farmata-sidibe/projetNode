@@ -32,7 +32,8 @@ exports.login = async(req, res) => {
         });
 
         if (user === null) {
-            console.log('Not found!');
+            res.status(401).json({ message: "l'utilisateur n'existe pas" });
+          
         } else {
 
             const passwordIsValid = bcrypt.compareSync(
@@ -40,8 +41,7 @@ exports.login = async(req, res) => {
                 user.password
             );
             if (!passwordIsValid) {
-                const error = new Error("Mot de passe incorrect");
-                return res.status(401).json(error);
+                return res.status(401).json({ message: "Mot de passe incorrect" });
             }
             let userdata = {
                 id: user.id,
