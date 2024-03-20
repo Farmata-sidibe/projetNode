@@ -2,8 +2,9 @@ const express = require("express");
 const router = express();
 const woodCtrl = require("../controllers/wood.js");
 
-router.get("/listwood", woodCtrl.listwood);
-router.get("/findByHardness/:hardness", woodCtrl.findByHardness);
+router.get("/readAll", woodCtrl.readAll);
+
+router.get("/readByHardness/:hardness", woodCtrl.readByHardness);
 
 
 
