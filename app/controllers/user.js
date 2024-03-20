@@ -32,16 +32,16 @@ exports.login = async(req, res) => {
         });
 
         if (user === null) {
-            res.status(401).json({ message: "l'utilisateur n'existe pas" });
+            res.status(404).json({ message: "l'utilisateur n'existe pas" });
           
         } else {
 
-            const passwordIsValid = bcrypt.compareSync(
+            const passwordIsValid = await bcrypt.compareSync(
                 req.body.password,
                 user.password
             );
             if (!passwordIsValid) {
-                return res.status(401).json({ message: "Mot de passe incorrect" });
+                res.status(401).json({ message: "Mot de passe incorrect" });
             }
             let userdata = {
                 id: user.id,
