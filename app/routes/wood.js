@@ -1,10 +1,10 @@
 const express = require("express");
 const router = express();
 const woodCtrl = require("../controllers/wood.js");
+const auth = require("../middleware/auth.js")
 
-router.get("/readAll", woodCtrl.readAll);
-
-router.get("/readByHardness/:hardness", woodCtrl.readByHardness);
+router.get("/", auth, woodCtrl.readAll);
+router.get("/:hardness", auth, woodCtrl.readByHardness);
 
 
 
