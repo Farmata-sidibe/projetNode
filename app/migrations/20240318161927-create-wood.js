@@ -13,17 +13,29 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       name: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        allowNull: false,
+        validate: {
+          notNull: { msg: "name is required" },
+        },
       },
       type: {
         type: Sequelize.ENUM,
+        allowNull: false,
         values: ["softwood", "exotic wood", "noble and hardwoods"],
-        defaultValue: "softwood"
+        defaultValue: "softwood",
+        validate: {
+          notNull: { msg: "type is required" },
+        },
       },
       hardness: {
         type: Sequelize.ENUM,
+        allowNull: false,
         values: ['tender', 'medium-hard', 'hard'],
-        defaultValue: "hard"
+        defaultValue: "hard",
+        validate: {
+          notNull: { msg: "hardness is required" },
+        },
       },
       image: {
         type: Sequelize.STRING,
