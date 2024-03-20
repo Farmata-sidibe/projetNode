@@ -15,15 +15,27 @@ module.exports = (sequelize, DataTypes) => {
   }
   Wood.init({
     name: {
-      type: DataTypes.STRING
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notNull: { msg: "name is required" },
+      },
     },
     type: {
       type: DataTypes.ENUM, 
-      values: ["softwood", "exotic wood", "noble and hardwoods"]
+      allowNull: false,
+      values: ["softwood", "exotic wood", "noble and hardwoods"],
+      validate: {
+        notNull: { msg: "type is required" },
+      },
     },
     hardness: {
       type: DataTypes.ENUM, 
-      values: ['tender', 'medium-hard','hard']
+      allowNull: false,
+      values: ['tender', 'medium-hard','hard'],
+      validate: {
+        notNull: { msg: "hardness is required" },
+      },
     },
     image: {
       type: DataTypes.STRING,
