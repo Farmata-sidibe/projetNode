@@ -25,6 +25,10 @@ module.exports = {
         values: ['tender', 'medium-hard', 'hard'],
         defaultValue: "hard"
       },
+      image: {
+        type: Sequelize.STRING,
+        allowNull: true,
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,

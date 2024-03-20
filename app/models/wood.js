@@ -25,6 +25,10 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.ENUM, 
       values: ['tender', 'medium-hard','hard']
     },
+    image: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
   }, {
     sequelize,
     timestamps: false,
