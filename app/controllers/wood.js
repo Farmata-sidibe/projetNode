@@ -111,9 +111,16 @@ exports.updateWood = async (req, res) => {
                     });
                 }
             }
-
+           
             await wood.update(newWood);
-            res.status(200).json({ newWood });
+
+            newWood = {
+           
+                ...wood.toJSON(),
+                links: woodHateoasify(wood),
+            };
+            res.status(200).json(newWood);
+         
         }
   } catch (err) {
         res.status(500).json({
