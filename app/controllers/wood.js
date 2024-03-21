@@ -1,4 +1,5 @@
 const { Wood } = require('../models');
+const fs = require('fs');
 
 exports.readAll = async(req, res) => {
     try{
@@ -52,8 +53,7 @@ exports.createWood = async(req, res) => {
 
 exports.updateWood = async(req, res) => {
     try{
-        const pathname = `${req.protocol}://${req.get("host")}/uploads/${req.file.filename}`;
-
+        
         const wood = await Wood.findOne({
             where: {
                 id: req.params.id
@@ -62,18 +62,31 @@ exports.updateWood = async(req, res) => {
         if (!wood) {
             res.status(404).json({ message: "l'essence de bois n'existe pas" });
         }else{
-            const woodUpdate = await Wood.update({ 
-                ... JSON.parse(req.body.datas), //Transforme les données en format utilisable
-                image: pathname,
-            }, {
-                where: {
-                    id: req.params.id
+
+            let newWood = {
+                ... JSON.parse(req.body.datas)
+            }
+            if(req.file){
+                const pathname = `${req.protocol}://${req.get("host")}/uploads/${req.file.filename}`;
+                newWood = {
+                    ...newWood,
+                    image: pathname,
                 }
-            });
-            res.status(201).json({
-                woodUpdate,
-                message: "l'essence de bois a bien été mis à jour"
-            })
+                if(wood.image){
+                    const filename = wood.image.split("/uploads/")[1];
+                    
+                    fs.unlink(`uploads/${filename}`, (err) => {
+                        if (err) {
+                            console.log(err.message);
+                        } else {
+                            console.log("File is Deleted");
+                        }
+                    });
+                }
+            }
+           
+            await wood.update({newWood});
+            res.status(201).json({newWood})
         }
 
    }catch(err){
