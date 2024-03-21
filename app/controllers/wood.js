@@ -1,55 +1,83 @@
 const { Wood } = require("../models");
 const fs = require("fs");
+const { woodHateoasify } = require("../helpers/hateoas");
 
 exports.readAll = async (req, res) => {
   try {
-    const woods = await Wood.findAll();
-    res.status(200).json(woods);
-  } catch (err) {
-    res.status(500).json({
-      message: err.message || "erreur lors de la recuperation des woods",
-    });
+        let woods = await Wood.findAll();
+
+        woods = woods.map((wood) => {
+            return {
+            ...wood.toJSON(),
+            links: woodHateoasify(wood),
+            };
+        });
+
+      
+        res.send( woodHateoasify( woods ) );
+        
+  } 
+  catch (err) {
+        res.status(500).json({
+            message: err.message || "erreur lors de la recuperation des woods",
+        });
   }
 };
 
 exports.readByHardness = async (req, res) => {
   try {
-    const woods = await Wood.findAll({
-      where: {
-        hardness: req.params.hardness,
-      },
-    });
-    res.status(200).json(woods);
-  } catch (err) {
-    res.status(500).json({
-      message: err.message || "erreur lors de la recuperation des woods",
-    });
+
+        let woods = await Wood.findAll({
+            where: {
+                hardness: req.params.hardness,
+            },
+        });
+        woods = woods.map((wood) => {
+            return {
+                ...wood.toJSON(),
+                links: woodHateoasify(wood),
+            };
+        });
+       
+        res.send( woodHateoasify( woods ) );
+
+
+  } 
+  catch (err) {
+        res.status(500).json({
+        message: err.message || "erreur lors de la recuperation des woods",
+        });
   }
 };
 
 exports.createWood = async (req, res) => {
   try {
-    const pathname = `${req.protocol}://${req.get("host")}/uploads/${
-      req.file.filename
-    }`;
+        const pathname = `${req.protocol}://${req.get("host")}/uploads/${req.file.filename}`;
 
-    const wood = await Wood.create({
-      ...JSON.parse(req.body.datas), //Transforme les données en format utilisable
-      image: pathname,
-    });
+        let wood = await Wood.create({
+            ...JSON.parse(req.body.datas), //Transforme les données en format utilisable
+            image: pathname,
+        });
+        wood = {
+           
+                ...wood.toJSON(),
+                links: woodHateoasify(wood),
+        };
+        res.status(201).json(wood);
 
-    res.status(201).json(wood);
-  } catch (err) {
-    res.status(500).json({
-      message:
-        err.message ||
-        "erreur lors de la creation d’une nouvelle essence de bois.",
-    });
+   
+  } 
+  catch (err) {
+        res.status(500).json({
+        message:
+            err.message ||
+            "erreur lors de la creation d’une nouvelle essence de bois.",
+        });
   }
 };
 
 exports.updateWood = async (req, res) => {
-    try {
+  try {
         const wood = await Wood.findOne({
             where: {
                 id: req.params.id,
@@ -67,8 +95,8 @@ exports.updateWood = async (req, res) => {
                 const pathname = `${req.protocol}://${req.get("host")}/uploads/${req.file.filename}`;
 
                 newWood = {
-                ...newWood,
-                image: pathname,
+                    ...newWood,
+                    image: pathname,
                 };
 
                 if (wood.image) {
@@ -76,9 +104,9 @@ exports.updateWood = async (req, res) => {
 
                     fs.unlink(`uploads/${filename}`, (err) => {
                         if (err) {
-                        console.log(err.message);
+                            console.log(err.message);
                         } else {
-                        console.log("File is Deleted");
+                            console.log("File is Deleted");
                         }
                     });
                 }
@@ -87,46 +115,43 @@ exports.updateWood = async (req, res) => {
             await wood.update(newWood);
             res.status(200).json({ newWood });
         }
-    } 
-    catch (err) {
+  } catch (err) {
         res.status(500).json({
             message: err.message || "erreur lors de la recuperation du wood",
         });
-    }
+  }
 };
 
 exports.deleteWood = async (req, res) => {
-    try {
-            const wood = await Wood.findOne({
-                where: {
-                    id: req.params.id,
-                },
-            });
+  try {
+        const wood = await Wood.findOne({
+            where: {
+                id: req.params.id,
+            },
+        });
         if (!wood) {
             res.status(404).json({ message: "wood not found" });
         } 
         else {
-
             if (wood.image) {
                 const filename = wood.image.split("/uploads/")[1];
 
                 fs.unlink(`uploads/${filename}`, (err) => {
-
-                    if (err) {
-                        console.log(err.message);
-                    } else {
-                        console.log("File is Deleted");
-                    }
+                if (err) {
+                    console.log(err.message);
+                } else {
+                    console.log("File is Deleted");
+                }
                 });
             }
 
             await wood.destroy();
             res.status(204).json();
         }
-    } 
+  } 
   catch (err) {
         res.status(500).json({
             message: err.message || "erreur lors de la recuperation du wood",
-    });
+        });
   }
 };
