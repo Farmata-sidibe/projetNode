@@ -8,6 +8,8 @@ router.get("/", auth, woodCtrl.readAll);
 router.get("/:hardness", auth, woodCtrl.readByHardness);
 router.post("/", auth, multer, woodCtrl.createWood);
 router.put("/:id", auth, multer, woodCtrl.updateWood);
+router.delete("/:id", auth, multer, woodCtrl.deleteWood);
+
 
 
 
