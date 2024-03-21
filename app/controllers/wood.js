@@ -85,8 +85,8 @@ exports.updateWood = async(req, res) => {
                 }
             }
            
-            await wood.update({newWood});
-            res.status(201).json({newWood})
+            await wood.update(newWood);
+            res.status(200).json({newWood})
         }
 
    }catch(err){
