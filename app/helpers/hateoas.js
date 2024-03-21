@@ -1,7 +1,7 @@
 /*
   Adds the `links` property to a note object 
 */
-function woodHateoas( responseWood ){
+exports.woodHateoas = responseWood =>{
   return[
       { 
         rel: "self", 
@@ -26,10 +26,10 @@ function woodHateoas( responseWood ){
   ];
 };
 
-function woodCollectionHateoas( responseWoods ) {
+exports.woodCollectionHateoas = responseWoods => {
   // Add a `links` array to each individual note object within the collection.
   // The `self` URI can be used to fetch more info about the note.
-  responseWoods.forEach( w => {
+  Object.entries(responseWoods).forEach( w => {
       w.links = [
           { 
             rel: "self", 
@@ -77,10 +77,4 @@ function woodCollectionHateoas( responseWoods ) {
     woods: responseWoods,
     links
   };
-}
-
-exports.woodHateoasify = ( response ) => {
-  const isCollection = Array.isArray( response );
-
-  return isCollection ? woodCollectionHateoas( response ) : woodHateoas( response );
 }

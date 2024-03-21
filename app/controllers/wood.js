@@ -1,6 +1,6 @@
 const { Wood } = require("../models");
 const fs = require("fs");
-const { woodHateoasify } = require("../helpers/hateoas");
+const { woodHateoas, woodCollectionHateoas } = require("../helpers/hateoas");
 
 exports.readAll = async (req, res) => {
   try {
@@ -9,12 +9,12 @@ exports.readAll = async (req, res) => {
         woods = woods.map((wood) => {
             return {
             ...wood.toJSON(),
-            links: woodHateoasify(wood),
+            links: woodCollectionHateoas(wood),
             };
         });
 
       
-        res.send( woodHateoasify( woods ) );
+        res.send( woodCollectionHateoas( woods ) );
         
   } 
   catch (err) {
@@ -35,11 +35,11 @@ exports.readByHardness = async (req, res) => {
         woods = woods.map((wood) => {
             return {
                 ...wood.toJSON(),
-                links: woodHateoasify(wood),
+                links: woodCollectionHateoas(wood),
             };
         });
        
-        res.send( woodHateoasify( woods ) );
+        res.send( woodCollectionHateoas( woods ) );
 
 
   } 
@@ -117,7 +117,7 @@ exports.updateWood = async (req, res) => {
             newWood = {
            
                 ...wood.toJSON(),
-                links: woodHateoasify(wood),
+                links: woodHateoas(wood),
             };
             res.status(200).json(newWood);
          
