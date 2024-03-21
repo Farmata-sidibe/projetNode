@@ -120,11 +120,7 @@ exports.deleteWood = async (req, res) => {
                 });
             }
 
-            await wood.destroy({
-                where: {
-                id: req.params.id,
-                },
-            });
+            await wood.destroy();
             res.status(204).json();
         }
     } 
