@@ -125,9 +125,7 @@ exports.deleteWood = async (req, res) => {
                 id: req.params.id,
                 },
             });
-            res.status(200).json({
-                message: "Deleted successful",
-            });
+            res.status(204).json();
         }
     } 
   catch (err) {
