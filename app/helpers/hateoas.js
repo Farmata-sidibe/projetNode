@@ -27,33 +27,6 @@ exports.woodHateoas = responseWood =>{
 };
 
 exports.woodCollectionHateoas = responseWoods => {
-  // Add a `links` array to each individual note object within the collection.
-  // The `self` URI can be used to fetch more info about the note.
-  Object.entries(responseWoods).forEach( w => {
-      w.links = [
-          { 
-            rel: "self", 
-            href: `/api/wood/${w.id}`, 
-            method: "GET" 
-          },
-          { 
-            rel: "update", 
-            href: `/api/wood/${w.id}`,
-            method: "PUT"
-          },
-          { 
-            rel: "delete", 
-            href: `/api/wood/${w.id}`, 
-            method: "DELETE" 
-          },
-          {
-            rel: "sameHardness",
-            href: `/api/wood/hardness/${w.hardness}`,
-            method: "GET",
-          },
-      ]
-  });
-
   // Add a "links" array for the entire collection of notes.
   const links = [
     { 
