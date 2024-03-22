@@ -36,6 +36,7 @@ exports.readByHardness = async (req, res) => {
     });
 
     res.send(woodCollectionHateoas(woods));
+    
   } catch (err) {
     res.status(500).json({
       message: err.message || "erreur lors de la recuperation des woods",
