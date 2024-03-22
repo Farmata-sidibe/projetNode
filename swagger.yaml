@@ -4,7 +4,7 @@ info:
   description: Une API pour gérer les données relatives aux essences de bois.
   version: 1.0.0
 servers:
-  - url: http://localhost:5000/api
+  - url: http://localhost:3000/api
 paths:
   /auth/signup:
     post:
@@ -72,3 +72,199 @@ paths:
                   message:
                     type: string
                     example: "notNull Violation: firstName is required"
+  
+
+  # path get login
+  /auth/login:
+    post:
+      tags:
+        - Auth
+      summary: Login
+      description: Sign in a account on API
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  example: "jane@doe.com"
+                password:
+                  type: string
+                  example: "azerty"
+      responses:
+        '200':
+          description: You're logging successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  accessToken:
+                    type: string
+                    example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaWF0IjoxNzExMTAwNTM1LCJleHAiOjE3MTExMDQxMzV9.uVHlS-cz-yP2mzwJ7367ZepkU1DfbVwjxU3Q3SuCRec
+                  user:
+                    id:
+                      type: integer
+                      example: 5
+                    email:
+                      type: string
+                      format: email
+                      example: jane@doe.com
+                    password:
+                      type: string
+                      example: "$2b$10$0W2.Zf4w6q3CVeptjetyr.BMAcUONS3cV0sc2uVG0r616fG/XZG7K"
+                    firstName:
+                      type: string
+                      example: Jane
+                    lastName:
+                      type: string
+                      example: Doe
+                  
+        '404':
+          description: User not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "User doesn't exist in a bdd "
+
+        '401':
+          description: Password incorrect
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Password incorrect "
+            
+        '500':
+          description: Missing some field
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "notNull Violation: email and password is required"
+
+  # path readByHardness
+  /wood/{hardness}:
+    get:
+      tags:
+        - Wood
+      summary: ReadByHardness
+      description: Read all woods by hardness define
+
+      parameters:
+        - hardness: "woodHardness"
+          in: "path"
+          description: "hardness of woods"
+          required: true
+          schema:
+            type: string
+
+      responses:
+        '200':
+          description: list of woods by hardness equal hard
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 7
+                  name:
+                    type: string
+                    example: Douglas
+                  type:
+                    type: string
+                    example: "softwood"
+                  hardness:
+                    type: string
+                    example: "hard"
+                  image:
+                    type: string
+                    format: image
+                    example: "http://localhost:3000/uploads/Bolo_de_laranja_e_coco_(com_farinha_de_arroz)_DSCN8883_1711036245923.jpg"
+            
+        '500':
+          description: Error during data recovery
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "notNull Violation: error during woods recovery"
+
+
+  # path create wood
+  /wood/:
+    post:
+      tags:
+        - Wood
+      summary: Create wood
+      description: Create a new wood
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: "Tacos"
+                type:
+                  type: string
+                  example: "noble and hardwoods"
+                hardness:
+                  type: string
+                  example: "medium-hard"
+                image:
+                  type: string
+                  format: image
+                  example: "http://localhost:3000/uploads/Bolo_de_laranja_e_coco_(com_farinha_de_arroz)_DSCN8883_1711105267290.jpg"
+      responses:
+        '201':
+          description: wood is create
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 12
+                  name:
+                    type: string
+                    example: "Tacos"
+                  type:
+                    type: string
+                    example: "noble and hardwoods"
+                  hardness:
+                    type: string
+                    example: "medium-hard"
+                  image:
+                    type: string
+                    format: image
+                    example: "http://localhost:3000/uploads/Bolo_de_laranja_e_coco_(com_farinha_de_arroz)_DSCN8883_1711105267290.jpg"
+        '500':
+          description: Missing some field
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "notNull Violation: name is required"
